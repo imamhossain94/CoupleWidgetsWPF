@@ -89,44 +89,33 @@ namespace CoupleWidgets.Widgets
 
 
 
-        void DateDiff(DateTime dt1, DateTime dt2)
+        void DateDiff(DateTime today, DateTime from)
         {
-            DateTime zeroTime = new DateTime(1, 1, 1);
-            int leapDaysInBetween = CountLeapDays(dt1, dt2);
-            TimeSpan span = dt2 - dt1;
-            int years = (zeroTime + span).Year - 1;
-            int months = (zeroTime + span).Month - 1;
-            int days = (zeroTime + span).Day - (leapDaysInBetween % 2 == 1 ? 1 : 0);
-            int weeks = days / 7;
-            int remainingdays = days % 7;
-            int hours = (zeroTime + span).Hour;
-            int minutes = (zeroTime + span).Minute;
-            int seconds = (zeroTime + span).Second;
-            DayCount.Text = string.Format("{0}y {1}m {2}d\n{3}h {4}m {5}s", years, months, remainingdays, hours, minutes, seconds);
-        }
+            DateTime currentTime = DateTime.Now;
+            int months = today.Month - from.Month;
+            int years = today.Year - from.Year;
 
-        private static int CountLeapDays(DateTime dt1, DateTime dt2)
-        {
-            int leapDaysInBetween = 0;
-            int year1 = dt1.Year, year2 = dt2.Year;
-            DateTime dateValue;
-            for (int i = year1; i <= year2; i++)
+            if (today.Day < from.Day) months--;
+            if (months < 0)
             {
-                if (DateTime.TryParse("02/29/" + i.ToString(), out dateValue))
-                {
-                    if (dateValue >= dt1 && dateValue <= dt2)
-                        leapDaysInBetween++;
-                }
+                years--;
+                months += 12;
             }
-            return leapDaysInBetween;
+
+            int days = (today - from.AddMonths((years * 12) + months)).Days;
+            int hours = currentTime.Hour;
+            int minutes = currentTime.Minute;
+            int seconds = currentTime.Second;
+
+            DayCount.Text = string.Format("{0}y {1}m {2}d\n{3}h {4}m {5}s", years, months, days, hours, minutes, seconds);
         }
 
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             DateTime parsedDate = DateTime.Parse(coupleData.startDate);
-            DateTime currentDate = DateTime.Now;
-            DateDiff(parsedDate, currentDate);
+            DateTime currentDate = DateTime.Today;
+            DateDiff(currentDate, parsedDate);
         }
     }
 }

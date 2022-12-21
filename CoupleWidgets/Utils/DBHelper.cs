@@ -1,7 +1,9 @@
 ﻿using CoupleWidgets.Model;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Windows;
 
@@ -15,6 +17,7 @@ namespace CoupleWidgets.Utils
         public DBHelper()
         {
             readData();
+            deleteImages();
         }
 
         // Ceate file if not exist
@@ -79,6 +82,35 @@ namespace CoupleWidgets.Utils
         }
 
 
+        // Delete unused images
+        public void deleteImages()
+        {
+            string[] files = { coupleData.firstCoupleImage, coupleData.secondCoupleImage };
+            string[] extentions = { ".jpg", ".png" };
+
+            string[] filePaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory);
+
+            foreach (string filePath in filePaths)
+            {
+                var name = new FileInfo(filePath).Name;
+                var ext = new FileInfo(filePath).Extension;
+
+                if (!files.Contains(filePath) && extentions.Contains(ext))
+                {
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch(Exception)
+                    {
+
+                    }
+                }
+            }
+
+        }
+
+
         public void updateFirstName(string name)
         {
             readData();
@@ -132,11 +164,12 @@ namespace CoupleWidgets.Utils
 
         private string copyFileToApplicationDirectory(string sourceFilePath)
         {
+            string filename = Guid.NewGuid().ToString() + Path.GetExtension(sourceFilePath);
             string destFilePath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory, 
-                Path.GetFileName(sourceFilePath));
+                AppDomain.CurrentDomain.BaseDirectory, filename);
 
             File.Copy(sourceFilePath, destFilePath, true);
+
             return destFilePath;
         }
     }
