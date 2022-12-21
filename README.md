@@ -8,7 +8,7 @@
 Keep your lover always with you!
 
 ### Download Setup file
-<a href="https://drive.google.com/file/d/1MrYchcuf8_QP6a3KSmg6D8gPUeBMoQIQ/view?usp=share_link">CoupleWidget.msi</a>
+<a href="https://drive.google.com/file/d/1z2YDNA6sjQZrjBQFt1eYafEwFek_bP-t/view?usp=share_link">CoupleWidget.msi</a>
 
 
 ### Feature
